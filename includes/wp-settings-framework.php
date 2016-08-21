@@ -161,6 +161,8 @@ if ( ! class_exists( 'wpt_WordPressSettingsFramework' ) ) {
 		 * @param array callback args from add_settings_field()
 		 */
 		function generate_setting( $args ) {
+			global $wp_trello;
+
 			$section  = $args['section'];
 			$defaults = array(
 				'id'      => 'default_field',
@@ -289,7 +291,7 @@ if ( ! class_exists( 'wpt_WordPressSettingsFramework' ) ) {
 					echo $std;
 					break;
 				case 'organizations':
-					$access_token = wp_trello::get_access_token();
+					$access_token = $wp_trello->get_access_token();
 					$disabled     = '';
 					if ( $access_token == '' ) {
 						$choices  = array( 0 => 'Connect with Trello' );

@@ -28,8 +28,6 @@ if ( ! session_id() ) {
 }
 require_once( plugin_dir_path( __FILE__ ) . 'includes/wpt-widget.php' );
 
-new wp_trello();
-
 class wp_trello {
 
 	private $plugin_path;
@@ -260,12 +258,10 @@ class wp_trello {
 	}
 
 	function trello_output( $type, $id, $link ) {
-		$wp_trello = new wp_trello();
-
-		$data         = $wp_trello->get_data( $type, $id );
-		$parent       = $wp_trello->get_parent( $type, $id );
+		$data         = $this->get_data( $type, $id );
+		$parent       = $this->get_parent( $type, $id );
 		$singular     = substr( $type, 0, -1 );
-		$target_blank = $wp_trello->default_val( $wp_trello->settings, 'wptsettings_general_target-blank', '' );
+		$target_blank = $this->default_val( $this->settings, 'wptsettings_general_target-blank', '' );
 		$target       = '';
 		if ( $target_blank == 1 ) {
 			$target = ' target="_blank"';
@@ -295,7 +291,7 @@ class wp_trello {
 			$html .= '</div>';
 			$html .= '</div>';
 		}
-		$link_love = $wp_trello->default_val( $wp_trello->settings, 'wptsettings_general_link-love', '' );
+		$link_love = $this->default_val( $this->settings, 'wptsettings_general_link-love', '' );
 		if ( $link_love == 1 ) {
 			$html .= 'Trello data served by <a href="http://wordpress.org/extend/plugins/wp-trello/" target="_blank">WP Trello</a>';
 		}
@@ -337,7 +333,7 @@ class wp_trello {
 			return;
 		}
 		$parent_object = $trello_objects[ $child_object - 1 ];
-		$parent        = wp_trello::get_data( $parent_object, $id );
+		$parent        = $this->get_data( $parent_object, $id );
 
 		return $parent;
 	}
@@ -373,3 +369,7 @@ class wp_trello {
 		die;
 	}
 }
+
+global $wp_trello;
+
+$wp_trello = new wp_trello();

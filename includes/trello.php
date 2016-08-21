@@ -385,10 +385,16 @@ class trello_oauth {
 	}
 
 	function getDropdown( $data, $object ) {
-		$select[0] = 'Select ' . ucfirst( $object );
-		if ( $object == 'organization' ) {
-			$select[1] = 'My Boards';
+		$select   = array();
+		$select[] = 'Select ' . ucfirst( $object );
+		if ( empty( $data ) ) {
+			return $select;
 		}
+
+		if ( $object == 'organization' ) {
+			$select[] = 'My Boards';
+		}
+
 		foreach ( $data as $item ) {
 			$select[ $item->id ] = isset( $item->displayName ) ? $item->displayName : $item->name;
 		}

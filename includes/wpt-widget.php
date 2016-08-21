@@ -10,6 +10,8 @@ class wpt_widget extends WP_Widget {
 	/* Front-end display of widget. */
 	public function widget( $args, $instance ) {
 		extract( $args );
+		global $wp_trello;
+
 		$title = apply_filters( 'widget_title', $instance['title'] );
 		$type  = isset( $instance['type'] ) ? $instance['type'] : false;
 		$id    = isset( $instance['id'] ) ? $instance['id'] : false;
@@ -20,7 +22,7 @@ class wpt_widget extends WP_Widget {
 			echo $before_title . $title . $after_title;
 		}
 
-		$html = wp_trello::trello_output( $type, $id, $link );
+		$html = $wp_trello->trello_output( $type, $id, $link );
 		echo $html;
 		echo $after_widget;
 	}
