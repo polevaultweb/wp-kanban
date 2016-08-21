@@ -1,0 +1,7 @@
+.wpt-section {
+    display: none;
+    padding-top: 10px;
+}
+.wpt-section-active {
+    display: block;
+}
