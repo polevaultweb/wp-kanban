@@ -1,28 +1,28 @@
 <?php
-/*  
-Plugin Name: WP Trello
-Plugin URI: http://www.polevaultweb.co.uk/plugins/wp-trello/  
-Description: A plugin to display data from Trello in your WordPress site.
-Author: polevaultweb 
-Version: 1.0.7
-Author URI: http://www.polevaultweb.com/
-
-Copyright 2013  polevaultweb  (email : info@polevaultweb.com)
-
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License, version 2, as 
-published by the Free Software Foundation.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-
-*/
+/**
+ * Plugin Name: WP Trello
+ * Plugin URI: http://www.polevaultweb.co.uk/plugins/wp-trello/
+ * Description: A plugin to display data from Trello in your WordPress site.
+ * Author: polevaultweb
+ * Version: 1.0.7
+ * Author URI: http://www.polevaultweb.com/
+ *
+ * Copyright 2013  polevaultweb  (email : info@polevaultweb.com)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License, version 2, as
+ * published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ *
+ */
 
 require_once( plugin_dir_path( __FILE__ ) . 'includes/freemius.php' );
 
