@@ -162,6 +162,17 @@ class wp_trello {
 				<?php foreach ( $wptsf_settings as $tab ) { ?>
 					<a href="?page=<?php echo $_GET['page']; ?>&tab=<?php echo $tab['section_id']; ?>" class="nav-tab<?php echo $active_tab == $tab['section_id'] ? ' nav-tab-active' : ''; ?>"><?php echo $tab['section_title']; ?></a>
 				<?php } ?>
+				<?php
+				global $wt_freemius;
+				if ( $wt_freemius->is_not_paying() ) {
+					$freemius_url   = $wt_freemius->get_upgrade_url();
+					$freemius_title = 'Upgrade';
+				} else {
+					$freemius_url   = $wt_freemius->get_account_url();
+					$freemius_title = 'Account';
+				}
+				?>
+				<a href="<?php echo $freemius_url; ?>" class="nav-tab"><?php echo $freemius_title; ?></a>
 				<?php if ( $connected ) {
 					$member   = $this->get_connected_member();
 					$fullname = ( $member != '' ) ? $member->username : '';
