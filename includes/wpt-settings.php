@@ -72,5 +72,13 @@ $wptsf_settings[] = array(
 			'choices' => array(),
 			'std'     => '',
 		),
+		array(
+			'id'      => 'checklists',
+			'title'   => __( 'Checklists', $plugin_l10n ),
+			'desc'    => __( '', $plugin_l10n ),
+			'type'    => 'checklists',
+			'choices' => array(),
+			'std'     => '',
+		),
 	),
 );

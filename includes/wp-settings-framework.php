@@ -326,7 +326,11 @@ if ( ! class_exists( 'wpt_WordPressSettingsFramework' ) ) {
 					echo '<option value="0">Select Card</option>';
 					echo '</select>  ID: <span id="card-id"></span>';
 					break;
-
+				case 'checklists':
+					echo '<select name="' . $this->option_group . '_settings[' . $el_id . ']" id="' . $el_id . '" class="' . $class . '" disabled="disabled">';
+					echo '<option value="0">Select Checklist</option>';
+					echo '</select>  ID: <span id="checklist-id"></span>';
+					break;
 				default:
 					break;
 			}

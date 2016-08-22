@@ -269,30 +269,43 @@ class wp_trello {
 		if ( $target_blank == 1 ) {
 			$target = ' target="_blank"';
 		}
-		if ( is_array( $data ) ) {
-			$html = '<ul class="wpt-' . $singular . '-wrapper">';
-			foreach ( $data as $item ) {
-				$html .= '<li class="wpt-' . $singular . '">';
-				if ( $link && strtolower( $link ) == 'yes' ) {
-					$url = ( isset( $item->url ) ) ? $item->url : '#';
-					$html .= '<a class="wpt-' . $singular . '-link" href="' . $url . '"' . $target . '>' . $item->name . '</a>';
-				} else {
+
+		if ( 'checklist' === $type ) {
+			if ( is_array( $data->checkItems ) ) {
+				$html = '<ul class="wpt-' . $singular . '-wrapper">';
+				foreach ( $data->checkItems as $item ) {
+					$html .= '<li class="wpt-' . $singular . '">';
 					$html .= make_clickable( $item->name );
+					$html .= '</li>';
 				}
-				$html .= '</li>';
+				$html .= '</ul>';
 			}
-			$html .= '</ul>';
 		} else {
-			$html = '<div class="wpt-' . $singular . '-wrapper">';
-			$html .= '<div class="wpt-' . $singular . '">';
-			if ( $link && strtolower( $link ) == 'yes' ) {
-				$url = ( isset( $data->url ) ) ? $data->url : '#';
-				$html .= '<a class="wpt-' . $singular . '-link" href="' . $url . '"' . $target . '>' . $data->name . '</a>';
+			if ( is_array( $data ) ) {
+				$html = '<ul class="wpt-' . $singular . '-wrapper">';
+				foreach ( $data as $item ) {
+					$html .= '<li class="wpt-' . $singular . '">';
+					if ( $link && strtolower( $link ) == 'yes' ) {
+						$url = ( isset( $item->url ) ) ? $item->url : '#';
+						$html .= '<a class="wpt-' . $singular . '-link" href="' . $url . '"' . $target . '>' . $item->name . '</a>';
+					} else {
+						$html .= make_clickable( $item->name );
+					}
+					$html .= '</li>';
+				}
+				$html .= '</ul>';
 			} else {
-				$html .= ( isset( $data->name ) ) ? make_clickable( $data->name ) : '';
+				$html = '<div class="wpt-' . $singular . '-wrapper">';
+				$html .= '<div class="wpt-' . $singular . '">';
+				if ( $link && strtolower( $link ) == 'yes' ) {
+					$url = ( isset( $data->url ) ) ? $data->url : '#';
+					$html .= '<a class="wpt-' . $singular . '-link" href="' . $url . '"' . $target . '>' . $data->name . '</a>';
+				} else {
+					$html .= ( isset( $data->name ) ) ? make_clickable( $data->name ) : '';
+				}
+				$html .= '</div>';
+				$html .= '</div>';
 			}
-			$html .= '</div>';
-			$html .= '</div>';
 		}
 		$link_love = $this->default_val( $this->settings, 'wptsettings_general_link-love', '' );
 		if ( $link_love == 1 ) {
@@ -329,9 +342,15 @@ class wp_trello {
 			1 => 'board',
 			2 => 'list',
 			3 => 'card',
+			4 => 'checklist',
 		);
-		$singular       = substr( $object, 0, -1 );
-		$child_object   = array_search( $singular, $trello_objects );
+
+		if ( 's' !== substr( $object, -1 ) ) {
+			return;
+		}
+
+		$singular     = substr( $object, 0, -1 );
+		$child_object = array_search( $singular, $trello_objects );
 		if ( $child_object == 0 ) {
 			return;
 		}

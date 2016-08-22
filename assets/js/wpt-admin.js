@@ -39,11 +39,20 @@ jQuery(document).ready(function($){
 	 $('select[name="wptsettings_settings[wptsettings_helper_cards]"]').change(function(){
 		var objectid = $('option:selected', this).val();
 		$('#card-id').html('');
+		 resetDropdown('Checklists');
 		if (objectid != '0') {
 			$('#card-id').html(objectid);
+			populateDropdown(objectid, 'checklists');
 		}
-		
 	 });
+
+	$( 'select[name="wptsettings_settings[wptsettings_helper_checklists]"]' ).change( function() {
+		var objectid = $( 'option:selected', this ).val();
+		$( '#checklist-id' ).html( '' );
+		if ( objectid != '0' ) {
+			$( '#checklist-id' ).html( objectid );
+		}
+	} );
 	 
 	 function populateDropdown(id, type) {
 		  $.post(ajaxurl, 
