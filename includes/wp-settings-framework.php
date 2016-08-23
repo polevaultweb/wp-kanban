@@ -297,7 +297,7 @@ if ( ! class_exists( 'wpt_WordPressSettingsFramework' ) ) {
 						$choices  = array( 0 => 'Connect with Trello' );
 						$disabled = ' disabled="disabled"';
 					} else {
-						$trello  = new trello_oauth( $access_token['oauth_token'], $access_token['oauth_token_secret'] );
+						$trello  = $wp_trello->trello_oauth( $access_token['oauth_token'], $access_token['oauth_token_secret'] );
 						$orgs    = $trello->getOrganizations();
 						$choices = $trello->getDropdown( $orgs, 'organization' );
 					}
@@ -326,14 +326,19 @@ if ( ! class_exists( 'wpt_WordPressSettingsFramework' ) ) {
 					echo '<option value="0">Select Card</option>';
 					echo '</select>  ID: <span id="card-id"></span>';
 					break;
-				case 'checklists':
-					echo '<select name="' . $this->option_group . '_settings[' . $el_id . ']" id="' . $el_id . '" class="' . $class . '" disabled="disabled">';
-					echo '<option value="0">Select Checklist</option>';
-					echo '</select>  ID: <span id="checklist-id"></span>';
-					break;
+
 				default:
 					break;
 			}
+
+			if ( wt_freemius()->is_plan( 'pro' ) ) {
+				if ( 'checklists' === $type ) {
+					echo '<select name="' . $this->option_group . '_settings[' . $el_id . ']" id="' . $el_id . '" class="' . $class . '" disabled="disabled">';
+					echo '<option value="0">Select Checklist</option>';
+					echo '</select>  ID: <span id="checklist-id"></span>';
+				}
+			}
+
 			do_action( 'wpsf_after_field' );
 			do_action( 'wpsf_after_field_' . $el_id );
 		}

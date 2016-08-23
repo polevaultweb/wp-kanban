@@ -22,6 +22,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *
+ * @fs_premium_only /includes/trello-pro.php
  */
 
 require_once( plugin_dir_path( __FILE__ ) . 'includes/freemius.php' );
@@ -93,6 +94,9 @@ class wp_trello {
 
 		// oAuth
 		require_once( $this->plugin_path . 'includes/trello.php' );
+		if ( wt_freemius()->is_plan('pro') ) {
+			require_once( $this->plugin_path . 'includes/trello-pro.php' );
+		}
 
 		// Settings
 		require_once( $this->plugin_path . 'includes/wp-settings-framework.php' );
@@ -139,6 +143,23 @@ class wp_trello {
 		return $links;
 	}
 
+	/**
+	 * Return instance of Trello API class
+	 *
+	 * @param null $oauth_token
+	 * @param null $oauth_token_secret
+	 *
+	 * @return trello_oauth
+	 */
+	public function trello_oauth( $oauth_token = null, $oauth_token_secret = null ) {
+		$trello_class = 'trello_oauth';
+		if ( wt_freemius()->is_plan('pro') ) {
+			$trello_class = 'trello_pro_oauth';
+		}
+
+		return new $trello_class( $oauth_token, $oauth_token_secret );
+	}
+
 	function settings_page() {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_die( 'You do not have sufficient permissions to access this page.' );
@@ -146,7 +167,7 @@ class wp_trello {
 		global $wptsf_settings;
 		$active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'general';
 		$connected  = $this->is_connected();
-		$trello     = new trello_oauth();
+		$trello     = $this->trello_oauth();
 		$source     = 'trello';
 		$callback   = $this->callback_url;
 		$url        = $trello->get_authorise_url( $callback, $source );
@@ -230,7 +251,7 @@ class wp_trello {
 			$callback          = $this->callback_url;
 			$request_code      = $_GET['oauth_verifier'];
 
-			$trello                = new trello_oauth( $auth_token, $auth_token_secret );
+			$trello                = $this->trello_oauth( $auth_token, $auth_token_secret );
 			$token                 = $trello->getAccessToken( $request_code, $callback );
 			$member                = $trello->getMember();
 			$trello_data['token']  = $token;
@@ -281,43 +302,52 @@ class wp_trello {
 			$target = ' target="_blank"';
 		}
 
-		if ( 'checklist' === $type ) {
-			if ( is_array( $data->checkItems ) ) {
-				$html = '<ul class="wpt-' . $singular . '-wrapper">';
-				foreach ( $data->checkItems as $item ) {
-					$html .= '<li class="wpt-' . $singular . '">';
-					$html .= make_clickable( $item->name );
-					$html .= '</li>';
-				}
-				$html .= '</ul>';
-			}
-		} else {
-			if ( is_array( $data ) ) {
-				$html = '<ul class="wpt-' . $singular . '-wrapper">';
-				foreach ( $data as $item ) {
-					$html .= '<li class="wpt-' . $singular . '">';
-					if ( $link && strtolower( $link ) == 'yes' ) {
-						$url = ( isset( $item->url ) ) ? $item->url : '#';
-						$html .= '<a class="wpt-' . $singular . '-link" href="' . $url . '"' . $target . '>' . $item->name . '</a>';
-					} else {
+		if ( wt_freemius()->is_plan( 'pro' ) ) {
+			if ( 'checklist' === $type ) {
+				if ( is_array( $data->checkItems ) ) {
+					$html = '<ul class="wpt-' . $singular . '-wrapper">';
+					foreach ( $data->checkItems as $item ) {
+						$html .= '<li class="wpt-' . $singular . '">';
 						$html .= make_clickable( $item->name );
+						$html .= '</li>';
 					}
-					$html .= '</li>';
+					$html .= '</ul>';
 				}
-				$html .= '</ul>';
-			} else {
-				$html = '<div class="wpt-' . $singular . '-wrapper">';
-				$html .= '<div class="wpt-' . $singular . '">';
-				if ( $link && strtolower( $link ) == 'yes' ) {
-					$url = ( isset( $data->url ) ) ? $data->url : '#';
-					$html .= '<a class="wpt-' . $singular . '-link" href="' . $url . '"' . $target . '>' . $data->name . '</a>';
-				} else {
-					$html .= ( isset( $data->name ) ) ? make_clickable( $data->name ) : '';
-				}
-				$html .= '</div>';
-				$html .= '</div>';
+
+				return $this->trello_output_suffix( $html );
 			}
 		}
+
+		if ( is_array( $data ) ) {
+			$html = '<ul class="wpt-' . $singular . '-wrapper">';
+			foreach ( $data as $item ) {
+				$html .= '<li class="wpt-' . $singular . '">';
+				if ( $link && strtolower( $link ) == 'yes' ) {
+					$url = ( isset( $item->url ) ) ? $item->url : '#';
+					$html .= '<a class="wpt-' . $singular . '-link" href="' . $url . '"' . $target . '>' . $item->name . '</a>';
+				} else {
+					$html .= make_clickable( $item->name );
+				}
+				$html .= '</li>';
+			}
+			$html .= '</ul>';
+		} else {
+			$html = '<div class="wpt-' . $singular . '-wrapper">';
+			$html .= '<div class="wpt-' . $singular . '">';
+			if ( $link && strtolower( $link ) == 'yes' ) {
+				$url = ( isset( $data->url ) ) ? $data->url : '#';
+				$html .= '<a class="wpt-' . $singular . '-link" href="' . $url . '"' . $target . '>' . $data->name . '</a>';
+			} else {
+				$html .= ( isset( $data->name ) ) ? make_clickable( $data->name ) : '';
+			}
+			$html .= '</div>';
+			$html .= '</div>';
+		}
+
+		return $this->trello_output_suffix( $html );
+	}
+
+	protected function trello_output_suffix( $html ) {
 		$link_love = $this->default_val( $this->settings, 'wptsettings_general_link-love', '' );
 		if ( $link_love == 1 ) {
 			$html .= 'Trello data served by <a href="http://wordpress.org/extend/plugins/wp-trello/" target="_blank">WP Trello</a>';
@@ -329,7 +359,7 @@ class wp_trello {
 	function get_data( $object, $id ) {
 		$trello_data  = get_option( 'wptsettings_trello' );
 		$access_token = isset( $trello_data['token'] ) ? $trello_data['token'] : '';
-		$trello       = new trello_oauth( $access_token['oauth_token'], $access_token['oauth_token_secret'] );
+		$trello       = $this->trello_oauth( $access_token['oauth_token'], $access_token['oauth_token_secret'] );
 		$method       = 'get' . ucfirst( $object );
 		$data         = call_user_func( array( $trello, $method ), $id );
 
@@ -339,7 +369,7 @@ class wp_trello {
 	function get_dropdown_data( $object, $id ) {
 		$trello_data  = get_option( 'wptsettings_trello' );
 		$access_token = isset( $trello_data['token'] ) ? $trello_data['token'] : '';
-		$trello       = new trello_oauth( $access_token['oauth_token'], $access_token['oauth_token_secret'] );
+		$trello       = $this->trello_oauth( $access_token['oauth_token'], $access_token['oauth_token_secret'] );
 		$method       = 'get' . ucfirst( $object );
 		$data         = call_user_func( array( $trello, $method ), $id );
 		$data         = $trello->getDropdown( $data, substr( $object, 0, -1 ) );

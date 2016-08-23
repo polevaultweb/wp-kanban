@@ -35,50 +35,55 @@ $wptsf_settings[] = array(
 	),
 );
 // API Helper section
+$api_helper_fields = array(
+	array(
+		'id'      => 'orgs',
+		'title'   => __( 'Organizations', $plugin_l10n ),
+		'desc'    => __( '', $plugin_l10n ),
+		'type'    => 'organizations',
+		'choices' => array(),
+		'std'     => '',
+	),
+	array(
+		'id'      => 'boards',
+		'title'   => __( 'Boards', $plugin_l10n ),
+		'desc'    => __( '', $plugin_l10n ),
+		'type'    => 'boards',
+		'choices' => array(),
+		'std'     => '',
+	),
+	array(
+		'id'      => 'lists',
+		'title'   => __( 'Lists', $plugin_l10n ),
+		'desc'    => __( '', $plugin_l10n ),
+		'type'    => 'lists',
+		'choices' => array(),
+		'std'     => '',
+	),
+	array(
+		'id'      => 'cards',
+		'title'   => __( 'Cards', $plugin_l10n ),
+		'desc'    => __( '', $plugin_l10n ),
+		'type'    => 'cards',
+		'choices' => array(),
+		'std'     => '',
+	),
+);
+
+if ( wt_freemius()->is_plan( 'pro' ) ) {
+	$api_helper_fields[] = array(
+		'id'      => 'checklists',
+		'title'   => __( 'Checklists', $plugin_l10n ),
+		'desc'    => __( '', $plugin_l10n ),
+		'type'    => 'checklists',
+		'choices' => array(),
+		'std'     => '',
+	);
+}
+
 $wptsf_settings[] = array(
 	'section_id'    => 'helper',
 	'section_title' => 'API Helper',
 	'section_order' => 2,
-	'fields'        => array(
-		array(
-			'id'      => 'orgs',
-			'title'   => __( 'Organizations', $plugin_l10n ),
-			'desc'    => __( '', $plugin_l10n ),
-			'type'    => 'organizations',
-			'choices' => array(),
-			'std'     => '',
-		),
-		array(
-			'id'      => 'boards',
-			'title'   => __( 'Boards', $plugin_l10n ),
-			'desc'    => __( '', $plugin_l10n ),
-			'type'    => 'boards',
-			'choices' => array(),
-			'std'     => '',
-		),
-		array(
-			'id'      => 'lists',
-			'title'   => __( 'Lists', $plugin_l10n ),
-			'desc'    => __( '', $plugin_l10n ),
-			'type'    => 'lists',
-			'choices' => array(),
-			'std'     => '',
-		),
-		array(
-			'id'      => 'cards',
-			'title'   => __( 'Cards', $plugin_l10n ),
-			'desc'    => __( '', $plugin_l10n ),
-			'type'    => 'cards',
-			'choices' => array(),
-			'std'     => '',
-		),
-		array(
-			'id'      => 'checklists',
-			'title'   => __( 'Checklists', $plugin_l10n ),
-			'desc'    => __( '', $plugin_l10n ),
-			'type'    => 'checklists',
-			'choices' => array(),
-			'std'     => '',
-		),
-	),
+	'fields'        => $api_helper_fields,
 );
