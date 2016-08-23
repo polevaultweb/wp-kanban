@@ -53,7 +53,21 @@ class wpt_widget extends WP_Widget {
 		$type  = isset( $instance['type'] ) ? $instance['type'] : false;
 		$id    = isset( $instance['id'] ) ? $instance['id'] : false;
 		$link  = isset( $instance['link'] ) ? $instance['link'] : false;
-		?>
+
+		$objects = array(
+			'organizations',
+			'boards',
+			'lists',
+			'cards',
+			'card',
+		);
+
+		if ( wt_freemius()->is__premium_only() ) {
+			if ( wt_freemius()->is_plan( 'pro' ) ) {
+				$objects[] = 'checklists';
+				$objects[] = 'checklist';
+			}
+		} ?>
 		<p>
 			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'wp-trello' ); ?></label>
 			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo $title; ?>" />
@@ -61,18 +75,9 @@ class wpt_widget extends WP_Widget {
 		<p>
 			<label for="<?php echo $this->get_field_id( 'type' ); ?>"><?php _e( 'Type:', 'wp-trello' ); ?></label>
 			<select class="widefat" id="<?php echo $this->get_field_id( 'size' ); ?>" name="<?php echo $this->get_field_name( 'type' ); ?>">
-				<option <?php selected( 'organizations', $type ); ?> value="organizations">Organizations</option>
-				<option <?php selected( 'boards', $type ); ?> value="boards">Boards</option>
-				<option <?php selected( 'lists', $type ); ?> value="lists">Lists</option>
-				<option <?php selected( 'cards', $type ); ?>value="cards">Cards</option>
-				<option <?php selected( 'card', $type ); ?>value="card">Card</option>
-				<?php
-				if ( wt_freemius()->is__premium_only() ) {
-					if ( wt_freemius()->is_plan( 'pro' ) ) : ?>
-						<option <?php selected( 'checklists', $type ); ?>value="checklists">Checklists</option>
-						<option <?php selected( 'checklist', $type ); ?>value="checklist">Checklist</option>
-					<?php endif;
-				} ?>
+				<?php foreach( $objects as $object ) : ?>
+					<option <?php selected( $object, $type ); ?> value="<?php echo $object; ?>"><?php echo ucfirst( $object ); ?></option>
+				<?php endforeach; ?>
 			</select>
 		</p>
 		<label for="<?php echo $this->get_field_id( 'id' ); ?>"><?php _e( 'ID:', 'wp-trello' ); ?></label>
