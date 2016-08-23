@@ -371,6 +371,11 @@ class wp_trello {
 		$access_token = isset( $trello_data['token'] ) ? $trello_data['token'] : '';
 		$trello       = $this->trello_oauth( $access_token['oauth_token'], $access_token['oauth_token_secret'] );
 		$method       = 'get' . ucfirst( $object );
+
+		if ( ! method_exists( $trello, $method ) ) {
+			return array();
+		}
+
 		$data         = call_user_func( array( $trello, $method ), $id );
 		$data         = $trello->getDropdown( $data, substr( $object, 0, -1 ) );
 

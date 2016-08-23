@@ -75,6 +75,11 @@ jQuery(document).ready(function($){
 	 
 	 function resetDropdown(type) {
 		 object = 'select[name="wptsettings_settings[wptsettings_helper_' + type.toLowerCase() + ']"]';
+
+		 if ( !$( object ).length ) {
+			 return;
+		 }
+
 		 len = type.length;
 		 labeltype = type.substr(0, len-1);
 		 idlabel = '#' + labeltype.toLowerCase() + '-id';
