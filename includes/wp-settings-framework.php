@@ -331,11 +331,13 @@ if ( ! class_exists( 'wpt_WordPressSettingsFramework' ) ) {
 					break;
 			}
 
-			if ( wt_freemius()->is_plan( 'pro' ) ) {
-				if ( 'checklists' === $type ) {
-					echo '<select name="' . $this->option_group . '_settings[' . $el_id . ']" id="' . $el_id . '" class="' . $class . '" disabled="disabled">';
-					echo '<option value="0">Select Checklist</option>';
-					echo '</select>  ID: <span id="checklist-id"></span>';
+			if ( wt_freemius()->is__premium_only() ) {
+				if ( wt_freemius()->is_plan( 'pro' ) ) {
+					if ( 'checklists' === $type ) {
+						echo '<select name="' . $this->option_group . '_settings[' . $el_id . ']" id="' . $el_id . '" class="' . $class . '" disabled="disabled">';
+						echo '<option value="0">Select Checklist</option>';
+						echo '</select>  ID: <span id="checklist-id"></span>';
+					}
 				}
 			}
 

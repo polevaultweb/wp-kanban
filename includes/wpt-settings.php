@@ -70,15 +70,17 @@ $api_helper_fields = array(
 	),
 );
 
-if ( wt_freemius()->is_plan( 'pro' ) ) {
-	$api_helper_fields[] = array(
-		'id'      => 'checklists',
-		'title'   => __( 'Checklists', $plugin_l10n ),
-		'desc'    => __( '', $plugin_l10n ),
-		'type'    => 'checklists',
-		'choices' => array(),
-		'std'     => '',
-	);
+if ( wt_freemius()->is__premium_only() ) {
+	if ( wt_freemius()->is_plan( 'pro' ) ) {
+		$api_helper_fields[] = array(
+			'id'      => 'checklists',
+			'title'   => __( 'Checklists', $plugin_l10n ),
+			'desc'    => __( '', $plugin_l10n ),
+			'type'    => 'checklists',
+			'choices' => array(),
+			'std'     => '',
+		);
+	}
 }
 
 $wptsf_settings[] = array(

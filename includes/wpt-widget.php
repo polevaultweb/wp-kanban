@@ -66,10 +66,13 @@ class wpt_widget extends WP_Widget {
 				<option <?php selected( 'lists', $type ); ?> value="lists">Lists</option>
 				<option <?php selected( 'cards', $type ); ?>value="cards">Cards</option>
 				<option <?php selected( 'card', $type ); ?>value="card">Card</option>
-				<?php if ( wt_freemius()->is_plan( 'pro' ) ) : ?>
-					<option <?php selected( 'checklists', $type ); ?>value="checklists">Checklists</option>
-					<option <?php selected( 'checklist', $type ); ?>value="checklist">Checklist</option>
-				<?php endif; ?>
+				<?php
+				if ( wt_freemius()->is__premium_only() ) {
+					if ( wt_freemius()->is_plan( 'pro' ) ) : ?>
+						<option <?php selected( 'checklists', $type ); ?>value="checklists">Checklists</option>
+						<option <?php selected( 'checklist', $type ); ?>value="checklist">Checklist</option>
+					<?php endif;
+				} ?>
 			</select>
 		</p>
 		<label for="<?php echo $this->get_field_id( 'id' ); ?>"><?php _e( 'ID:', 'wp-trello' ); ?></label>

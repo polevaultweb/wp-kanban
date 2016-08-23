@@ -94,8 +94,10 @@ class wp_trello {
 
 		// oAuth
 		require_once( $this->plugin_path . 'includes/trello.php' );
-		if ( wt_freemius()->is_plan('pro') ) {
-			require_once( $this->plugin_path . 'includes/trello-pro.php' );
+		if ( wt_freemius()->is__premium_only() ) {
+			if ( wt_freemius()->is_plan( 'pro' ) ) {
+				require_once( $this->plugin_path . 'includes/trello-pro.php' );
+			}
 		}
 
 		// Settings
@@ -153,8 +155,10 @@ class wp_trello {
 	 */
 	public function trello_oauth( $oauth_token = null, $oauth_token_secret = null ) {
 		$trello_class = 'trello_oauth';
-		if ( wt_freemius()->is_plan('pro') ) {
-			$trello_class = 'trello_pro_oauth';
+		if ( wt_freemius()->is__premium_only() ) {
+			if ( wt_freemius()->is_plan( 'pro' ) ) {
+				$trello_class = 'trello_pro_oauth';
+			}
 		}
 
 		return new $trello_class( $oauth_token, $oauth_token_secret );
@@ -302,19 +306,21 @@ class wp_trello {
 			$target = ' target="_blank"';
 		}
 
-		if ( wt_freemius()->is_plan( 'pro' ) ) {
-			if ( 'checklist' === $type ) {
-				if ( is_array( $data->checkItems ) ) {
-					$html = '<ul class="wpt-' . $singular . '-wrapper">';
-					foreach ( $data->checkItems as $item ) {
-						$html .= '<li class="wpt-' . $singular . '">';
-						$html .= make_clickable( $item->name );
-						$html .= '</li>';
+		if ( wt_freemius()->is__premium_only() ) {
+			if ( wt_freemius()->is_plan( 'pro' ) ) {
+				if ( 'checklist' === $type ) {
+					if ( is_array( $data->checkItems ) ) {
+						$html = '<ul class="wpt-' . $singular . '-wrapper">';
+						foreach ( $data->checkItems as $item ) {
+							$html .= '<li class="wpt-' . $singular . '">';
+							$html .= make_clickable( $item->name );
+							$html .= '</li>';
+						}
+						$html .= '</ul>';
 					}
-					$html .= '</ul>';
-				}
 
-				return $this->trello_output_suffix( $html );
+					return $this->trello_output_suffix( $html );
+				}
 			}
 		}
 
