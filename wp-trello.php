@@ -1,16 +1,16 @@
 <?php
-/*  
+/*
 Plugin Name: WP Trello
-Plugin URI: http://www.polevaultweb.co.uk/plugins/wp-trello/  
+Plugin URI: http://www.polevaultweb.co.uk/plugins/wp-trello/
 Description: A plugin to display data from Trello in your WordPress site.
-Author: polevaultweb 
+Author: polevaultweb
 Version: 1.0.7
 Author URI: http://www.polevaultweb.com/
 
 Copyright 2013  polevaultweb  (email : info@polevaultweb.com)
 
 This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License, version 2, as 
+it under the terms of the GNU General Public License, version 2, as
 published by the Free Software Foundation.
 
 This program is distributed in the hope that it will be useful,
@@ -285,6 +285,7 @@ class wp_trello {
 			if ( $link && strtolower( $link ) == 'yes' ) {
 				$url = ( isset( $data->url ) ) ? $data->url : '#';
 				$html .= '<a class="wpt-' . $singular . '-link" href="' . $url . '"' . $target . '>' . $data->name . '</a>';
+				$html .= '<p class="wpt-' . $singular . '-desc">' . $data->desc . '</p>';
 			} else {
 				$html .= ( isset( $data->name ) ) ? make_clickable( $data->name ) : '';
 			}
