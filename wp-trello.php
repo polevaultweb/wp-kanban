@@ -273,6 +273,7 @@ class wp_trello {
 				if ( $link && strtolower( $link ) == 'yes' ) {
 					$url = ( isset( $item->url ) ) ? $item->url : '#';
 					$html .= '<a class="wpt-' . $singular . '-link" href="' . $url . '"' . $target . '>' . $item->name . '</a>';
+					$html .= '<p class="wpt-' . $singular . '-desc">' . $data->desc . '</p>';
 				} else {
 					$html .= make_clickable( $item->name );
 				}
@@ -285,7 +286,6 @@ class wp_trello {
 			if ( $link && strtolower( $link ) == 'yes' ) {
 				$url = ( isset( $data->url ) ) ? $data->url : '#';
 				$html .= '<a class="wpt-' . $singular . '-link" href="' . $url . '"' . $target . '>' . $data->name . '</a>';
-				$html .= '<p class="wpt-' . $singular . '-desc">' . $data->desc . '</p>';
 			} else {
 				$html .= ( isset( $data->name ) ) ? make_clickable( $data->name ) : '';
 			}

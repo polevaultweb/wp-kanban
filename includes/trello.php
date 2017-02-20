@@ -364,7 +364,7 @@ class trello_oauth {
 	}
 
 	function getList( $id ) {
-		$params = array();
+		$params = array('card_fields' => 'name,desc');
 		$list   = $this->get( 'lists/' . $id, $params, 0 );
 
 		return $list;
