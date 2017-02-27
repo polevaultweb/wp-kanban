@@ -267,19 +267,30 @@ class wp_trello {
 			$target = ' target="_blank"';
 		}
 		if ( is_array( $data ) ) {
-			$html = '<ul class="wpt-' . $singular . '-wrapper">';
+			$html = '<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">';
 			foreach ( $data as $item ) {
-				$html .= '<li class="wpt-' . $singular . '">';
+				$html .= '<div class="panel panel-default">';
 				if ( $link && strtolower( $link ) == 'yes' ) {
 					$url = ( isset( $item->url ) ) ? $item->url : '#';
-					$html .= '<a class="wpt-' . $singular . '-link" href="' . $url . '"' . $target . '>' . $item->name . '</a>';
-					$html .= '<p class="wpt-' . $singular . '-desc">' . $data->desc . '</p>';
+
+					// Panel heading
+					$html .= '<div class="panel-heading" role="tab" id="headingOne"><h4 class="panel-title">';
+					$html .= '<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">';
+					$html .= $item->name;
+					$html .= '</a></h4></div>';
+
+					// Panel body
+					$html .= '<div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">';
+					$html .= '<div class="panel-body">';
+					$html .= $item->desc;
+					$html .= '<br /><a class="wpt-' . $singular . '-link" href="' . $url . '"' . $target . '>' . $item->name . '</a>';
+					$html .= '</div></div>';
 				} else {
 					$html .= make_clickable( $item->name );
 				}
-				$html .= '</li>';
+				$html .= '</div>';
 			}
-			$html .= '</ul>';
+			$html .= '</div>';
 		} else {
 			$html = '<div class="wpt-' . $singular . '-wrapper">';
 			$html .= '<div class="wpt-' . $singular . '">';
