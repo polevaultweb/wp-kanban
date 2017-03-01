@@ -266,28 +266,51 @@ class wp_trello {
 		if ( $target_blank == 1 ) {
 			$target = ' target="_blank"';
 		}
+
 		if ( is_array( $data ) ) {
 			$html = '<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">';
+			
 			foreach ( $data as $item ) {
 				$html .= '<div class="panel panel-default">';
-				if ( $link && strtolower( $link ) == 'yes' ) {
-					$url = ( isset( $item->url ) ) ? $item->url : '#';
+				$url = ( isset( $item->url ) ) ? $item->url : '#';
+
+				// Panel heading
+				$html .= '<div class="panel-heading" role="tab" id="heading'.$item->id.'"><h4 class="panel-title">';
+				$html .= '<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse'.$item->id.'" aria-expanded="true" aria-controls="collapse'.$item->id.'">';
+				$html .= $item->name;
+				$html .= '</a></h4></div>';
+
+				// Get cards based on list id
+				$listdata         = $this->get_data( "cards", $item->id );
+
+				$html .= '<div id="collapse'.$item->id.'" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading'.$item->id.'">';
+				$html .= '<div class="panel-body">';
+				$html .= '<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">';
+
+				foreach($listdata as $card) {
+
+					$card_url = ( isset( $card->url ) ) ? $card->url : '#';
+
+					$html .= '<div class="panel panel-default">';
 
 					// Panel heading
-					$html .= '<div class="panel-heading" role="tab" id="headingOne"><h4 class="panel-title">';
-					$html .= '<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">';
-					$html .= $item->name;
+					$html .= '<div class="panel-heading" role="tab" id="heading'.$card->id.'"><h4 class="panel-title">';
+					$html .= '<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse'.$card->id.'" aria-expanded="true" aria-controls="collapse'.$card->id.'">';
+					$html .= $card->name;
 					$html .= '</a></h4></div>';
 
 					// Panel body
-					$html .= '<div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">';
 					$html .= '<div class="panel-body">';
-					$html .= $item->desc;
-					$html .= '<br /><a class="wpt-' . $singular . '-link" href="' . $url . '"' . $target . '>' . $item->name . '</a>';
-					$html .= '</div></div>';
-				} else {
-					$html .= make_clickable( $item->name );
+					$html .= $card->desc;
+					$html .= '<br /><a class="" href="' . $card->url . '">' . $card->name . '</a>';
+					$html .= '</div>';
+
+					$html .= '</div>'; // panel
 				}
+				
+				$html .= '</div>'; // panel-group
+				$html .= '</div>'; // panel-body
+				$html .= '</div>'; // panel-collapse
 				$html .= '</div>';
 			}
 			$html .= '</div>';
