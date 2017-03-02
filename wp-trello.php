@@ -269,33 +269,46 @@ class wp_trello {
 
 		if ( is_array( $data ) ) {
 			$html = '<div class="fluidtable">';
-			$html .= '<h1 class="fluidtable__heading">Roadmap</h1>';
+			$html .= '<div class="container-fluid">';
+				$html .= '<h1 class="fluidtable__heading">Roadmap</h1>';
+			$html .= '</div>';
 			$html .= '<div class="fluidtable__wrapper">';
 			$html .= '<div class="fluidtable__header">';
-				$html .= '<nav class="navbar navbar-secondary fluidtable__navbar" role="tabs" aria-label="Roadmap tabs"><div class="container-fluid">';
-					$html .= '<div class="navbar-header">';
-						$html .= '<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#roadmap-nav-collapse" aria-expanded="false">';
-							$html .= '<span class="sr-only">Toggle navigation</span>';
-							$html .= '<span class="icon-bar"></span>';
-							$html .= '<span class="icon-bar"></span>';
-							$html .= '<span class="icon-bar"></span>';
-						$html .= '</button>';
-					$html .= '</div>';
-					$html .= '<div class="collapse navbar-collapse" id="roadmap-nav-collapse">';
-						$html .= '<ul class="nav navbar-nav">';
-						// Roadmap navigation									
-						foreach ( $data as $i => $item ) {
-							$class = '';
-							if ( $i == 0 ) $class = 'active';
-							$html .= '<li class="'.$class.'"><a href="#" title="'.$item->name.'" data-toggle="list_'.$i.'" class="nav-link--roadmap">'.$item->name.'</a></li>';
-						}
-						$html .= '</ul>';
+				$html .= '<nav class="navbar navbar-secondary fluidtable__navbar" role="tabs" aria-label="Roadmap tabs">';
+					$html .= '<div class="container-fluid">';
+						$html .= '<div class="navbar-header">';
+							$html .= '<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#roadmap-nav-collapse" aria-expanded="false">';
+								$html .= '<span class="sr-only">Toggle navigation</span>';
+								$html .= '<span class="icon-bar"></span>';
+								$html .= '<span class="icon-bar"></span>';
+								$html .= '<span class="icon-bar"></span>';
+							$html .= '</button>';
+						$html .= '</div>';
+						$html .= '<div class="collapse navbar-collapse" id="roadmap-nav-collapse">';
+							$html .= '<ul class="nav navbar-nav">';
+							// Roadmap navigation									
+							foreach ( $data as $i => $item ) {
+
+								$item_name_arr = explode('-', $item->name);
+								if ( $item_name_arr[1] ) {
+									$item_name = $item_name_arr[0];
+								} else {
+									$item_name = $item->name;
+								}
+
+								$class = '';
+								if ( $i == 0 ) $class = 'active';
+								$html .= '<li class="'.$class.'"><a href="#" title="'.$item->name.'" data-toggle="list_'.$i.'" class="nav-link--roadmap">'.$item_name.'</a></li>';
+							}
+							$html .= '</ul>';
+						$html .= '</div>';
 					$html .= '</div>';
 				$html .= '</nav>';
 			$html .= '</div>';
 
 			// Roadmap datasets
 			$html .= '<div class="fluidtable__body">';
+			$html .= '<div class="container-fluid">';
 			foreach ( $data as $i => $item ) {
 				foreach($this->get_data( "cards", $item->id ) as $card) {
 					if ( $i == 0 ) {
@@ -318,6 +331,7 @@ class wp_trello {
 					$html .= '</div>';
 				}
 			}
+			$html .= '</div>';
 			$html .= '</div>'; // fluidtable__body
 
 			$html .= '</div>'; // fluidtable__wrapper
