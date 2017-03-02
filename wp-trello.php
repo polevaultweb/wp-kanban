@@ -268,10 +268,11 @@ class wp_trello {
 		}
 
 		if ( is_array( $data ) ) {
-			$html = '<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">';
+			$html = '<div class="roadmap-accordion">';
+			$html .= '<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">';
 			
 			foreach ( $data as $item ) {
-				$html .= '<div class="panel panel-default">';
+				$html .= '<div class="panel panel-secondary">';
 				$url = ( isset( $item->url ) ) ? $item->url : '#';
 
 				// Panel heading
@@ -285,7 +286,7 @@ class wp_trello {
 
 				$html .= '<div id="collapse'.$item->id.'" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading'.$item->id.'">';
 				$html .= '<div class="panel-body">';
-				$html .= '<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">';
+				$html .= '<div class="panel-group" id="accordion_'.$item->id.'" role="tablist" aria-multiselectable="true">';
 
 				foreach($listdata as $card) {
 
@@ -313,6 +314,7 @@ class wp_trello {
 				$html .= '</div>'; // panel-collapse
 				$html .= '</div>';
 			}
+			$html .= '</div>';
 			$html .= '</div>';
 		} else {
 			$html = '<div class="wpt-' . $singular . '-wrapper">';
