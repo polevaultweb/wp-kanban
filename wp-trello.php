@@ -268,54 +268,60 @@ class wp_trello {
 		}
 
 		if ( is_array( $data ) ) {
-			$html = '<div class="roadmap-accordion">';
-			$html .= '<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">';
-			
-			foreach ( $data as $item ) {
-				$html .= '<div class="panel panel-secondary">';
-				$url = ( isset( $item->url ) ) ? $item->url : '#';
-
-				// Panel heading
-				$html .= '<div class="panel-heading" role="tab" id="heading'.$item->id.'"><h4 class="panel-title">';
-				$html .= '<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse'.$item->id.'" aria-expanded="true" aria-controls="collapse'.$item->id.'">';
-				$html .= $item->name;
-				$html .= '</a></h4></div>';
-
-				// Get cards based on list id
-				$listdata         = $this->get_data( "cards", $item->id );
-
-				$html .= '<div id="collapse'.$item->id.'" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading'.$item->id.'">';
-				$html .= '<div class="panel-body">';
-				$html .= '<div class="panel-group" id="accordion_'.$item->id.'" role="tablist" aria-multiselectable="true">';
-
-				foreach($listdata as $card) {
-
-					$card_url = ( isset( $card->url ) ) ? $card->url : '#';
-
-					$html .= '<div class="panel panel-default">';
-
-					// Panel heading
-					$html .= '<div class="panel-heading" role="tab" id="heading'.$card->id.'"><h4 class="panel-title">';
-					$html .= '<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse'.$card->id.'" aria-expanded="true" aria-controls="collapse'.$card->id.'">';
-					$html .= $card->name;
-					$html .= '</a></h4></div>';
-
-					// Panel body
-					$html .= '<div class="panel-body">';
-					$html .= $card->desc;
-					$html .= '<br /><a class="" href="' . $card->url . '">' . $card->name . '</a>';
+			$html = '<div class="fluidtable">';
+			$html .= '<h1 class="fluidtable__heading">Roadmap</h1>';
+			$html .= '<div class="fluidtable__wrapper">';
+			$html .= '<div class="fluidtable__header">';
+				$html .= '<nav class="navbar navbar-secondary fluidtable__navbar" role="tabs" aria-label="Roadmap tabs"><div class="container-fluid">';
+					$html .= '<div class="navbar-header">';
+						$html .= '<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#roadmap-nav-collapse" aria-expanded="false">';
+							$html .= '<span class="sr-only">Toggle navigation</span>';
+							$html .= '<span class="icon-bar"></span>';
+							$html .= '<span class="icon-bar"></span>';
+							$html .= '<span class="icon-bar"></span>';
+						$html .= '</button>';
 					$html .= '</div>';
+					$html .= '<div class="collapse navbar-collapse" id="roadmap-nav-collapse">';
+						$html .= '<ul class="nav navbar-nav">';
+						// Roadmap navigation									
+						foreach ( $data as $i => $item ) {
+							$class = '';
+							if ( $i == 0 ) $class = 'active';
+							$html .= '<li class="'.$class.'"><a href="#" title="'.$item->name.'" data-toggle="list_'.$i.'" class="nav-link--roadmap">'.$item->name.'</a></li>';
+						}
+						$html .= '</ul>';
+					$html .= '</div>';
+				$html .= '</nav>';
+			$html .= '</div>';
 
-					$html .= '</div>'; // panel
+			// Roadmap datasets
+			$html .= '<div class="fluidtable__body">';
+			foreach ( $data as $i => $item ) {
+				foreach($this->get_data( "cards", $item->id ) as $card) {
+					if ( $i == 0 ) {
+						$html .= '<div class="fluidtable__row" data-list-id="list_'.$i.'">';
+					} else {
+						$html .= '<div class="fluidtable__row" data-list-id="list_'.$i.'" style="display: none;">';
+					}
+						$html .= '<div class="fluidtable__cell fluidtable__cell--meta">';
+							$html .= '<div class="fluidtable__cell-content"><span>'.$card->dateLastActivity.'</span></div>';
+						$html .= '</div>';
+
+						$html .= '<div class="fluidtable__cell fluidtable__cell--title">';
+							$html .= '<div class="fluidtable__cell-content"><h3 class="heading">'.$card->name.'</h3></div>';
+						$html .= '</div>';
+						$desc = $card->desc;
+						if ( $desc == '' ) $desc = ' - ';
+						$html .= '<div class="fluidtable__cell fluidtable__cell--desc">';
+							$html .= '<div class="fluidtable__cell-content">'.$desc.'</div>';
+						$html .= '</div>';
+					$html .= '</div>';
 				}
-				
-				$html .= '</div>'; // panel-group
-				$html .= '</div>'; // panel-body
-				$html .= '</div>'; // panel-collapse
-				$html .= '</div>';
 			}
-			$html .= '</div>';
-			$html .= '</div>';
+			$html .= '</div>'; // fluidtable__body
+
+			$html .= '</div>'; // fluidtable__wrapper
+			$html .= '</div>'; // fluidtable
 		} else {
 			$html = '<div class="wpt-' . $singular . '-wrapper">';
 			$html .= '<div class="wpt-' . $singular . '">';
