@@ -284,7 +284,7 @@ class wp_trello {
 								$html .= '<span class="icon-bar"></span>';
 							$html .= '</button>';
 						$html .= '</div>';
-						$html .= '<div class="collapse navbar-collapse" id="roadmap-nav-collapse">';
+						$html .= '<div>';
 							$html .= '<ul class="nav navbar-nav">';
 							// Roadmap navigation									
 							foreach ( $data as $i => $item ) {
