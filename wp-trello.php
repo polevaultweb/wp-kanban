@@ -317,7 +317,7 @@ class wp_trello {
 						$html .= '<div class="fluidtable__row" data-list-id="list_'.$i.'" style="display: none;">';
 					}
 						$html .= '<div class="fluidtable__cell fluidtable__cell--meta">';
-							$html .= '<div class="fluidtable__cell-content"><span>'.$card->dateLastActivity.'</span></div>';
+							$html .= '<div class="fluidtable__cell-content"><span>' . parse_date($card->dateLastActivity) . '</span></div>';
 						$html .= '</div>';
 
 						$html .= '<div class="fluidtable__cell fluidtable__cell--title">';
@@ -364,6 +364,11 @@ class wp_trello {
 		$data         = call_user_func( array( $trello, $method ), $id );
 
 		return $data;
+	}
+
+	function parse_date($date) {
+  		$d = new DateTime($date);
+  		return $d->format('j n Y');
 	}
 
 	function get_dropdown_data( $object, $id ) {
