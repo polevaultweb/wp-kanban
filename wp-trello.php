@@ -80,6 +80,7 @@ class wp_trello {
 		add_action( 'admin_init', array( $this, 'trello_connect' ) );
 		add_action( 'wp_ajax_wpt_get_objects', array( $this, 'wpt_get_objects' ) );
 		add_action( 'wp_ajax_wpt_disconnect', array( $this, 'wpt_disconnect' ) );
+		add_action( 'wp_ajax_wpt_update_lists', array( $this, 'wpt_update_lists' ) );
 		add_filter( 'plugin_action_links', array( $this, 'plugin_settings_link' ), 10, 2 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'custom_css' ) );
 
@@ -222,7 +223,10 @@ class wp_trello {
 			$trello_data['token']  = $token;
 			$trello_data['member'] = $member;
 
+			$trello_lists 					= array();
+
 			update_option( 'wptsettings_trello', $trello_data );
+			update_option( 'wptsettings_lists', $trello_lists );
 			header( 'Location: ' . $this->callback_url );
 		}
 	}
@@ -267,6 +271,8 @@ class wp_trello {
 			$target = ' target="_blank"';
 		}
 
+		$data = $this->getActiveLists($data);
+
 		if ( is_array( $data ) ) {
 			$html = '<div class="fluidtable">';
 			$html .= '<div class="container-fluid">';
@@ -298,7 +304,9 @@ class wp_trello {
 
 								$class = '';
 								if ( $i == 0 ) $class = 'active';
-								$html .= '<li class="'.$class.'"><a href="#" title="'.$item->name.'" data-toggle="list_'.$i.'" class="nav-link--roadmap">'.$item_name.'</a></li>';
+								if ( $item->isActive ) {
+									$html .= '<li class="'.$class.'"><a href="#" title="'.$item->name.'" data-toggle="list_'.$i.'" class="nav-link--roadmap">'.$item_name.'</a></li>';
+								}
 							}
 							$html .= '</ul>';
 						$html .= '</div>';
@@ -310,25 +318,29 @@ class wp_trello {
 			$html .= '<div class="fluidtable__body">';
 			$html .= '<div class="container-fluid">';
 			foreach ( $data as $i => $item ) {
-				foreach($this->get_data( "cards", $item->id ) as $card) {
-					if ( $i == 0 ) {
-						$html .= '<div class="fluidtable__row" data-list-id="list_'.$i.'">';
-					} else {
-						$html .= '<div class="fluidtable__row" data-list-id="list_'.$i.'" style="display: none;">';
-					}
-						$html .= '<div class="fluidtable__cell fluidtable__cell--meta">';
-							$html .= '<div class="fluidtable__cell-content"><span>'.parse_date($card->dateLastActivity).'</span></div>';
-						$html .= '</div>';
 
-						$html .= '<div class="fluidtable__cell fluidtable__cell--title">';
-							$html .= '<div class="fluidtable__cell-content"><h3 class="heading">'.$card->name.'</h3></div>';
+				// Show only active lists
+				if ( $item->isActive ) {
+					foreach($this->get_data( "cards", $item->id ) as $card) {
+						if ( $i == 0 ) {
+							$html .= '<div class="fluidtable__row" data-list-id="list_'.$i.'">';
+						} else {
+							$html .= '<div class="fluidtable__row" data-list-id="list_'.$i.'" style="display: none;">';
+						}
+							$html .= '<div class="fluidtable__cell fluidtable__cell--meta">';
+								$html .= '<div class="fluidtable__cell-content"><span>'.parse_date($card->dateLastActivity).'</span></div>';
+							$html .= '</div>';
+
+							$html .= '<div class="fluidtable__cell fluidtable__cell--title">';
+								$html .= '<div class="fluidtable__cell-content"><h3 class="heading">'.$card->name.'</h3></div>';
+							$html .= '</div>';
+							$desc = $card->desc;
+							if ( $desc == '' ) $desc = ' - ';
+							$html .= '<div class="fluidtable__cell fluidtable__cell--desc">';
+								$html .= '<div class="fluidtable__cell-content">'.$desc.'</div>';
+							$html .= '</div>';
 						$html .= '</div>';
-						$desc = $card->desc;
-						if ( $desc == '' ) $desc = ' - ';
-						$html .= '<div class="fluidtable__cell fluidtable__cell--desc">';
-							$html .= '<div class="fluidtable__cell-content">'.$desc.'</div>';
-						$html .= '</div>';
-					$html .= '</div>';
+					}
 				}
 			}
 			$html .= '</div>';
@@ -366,6 +378,16 @@ class wp_trello {
 		return $data;
 	}
 
+	function getActiveLists($lists) {
+		$savedLists = get_option('wptsettings_lists');
+		foreach ( $lists as $list ) {
+			if ( $savedLists[$list->id] ) {
+				$list->isActive = true;
+			}
+		}
+		return $lists;
+	}
+
 	function parse_date($date) {
 			$d = DateTime::createFromFormat("Y-m-d\TH:i:s.000\Z", $date);
 			return $d->format('j.n.Y');
@@ -377,7 +399,12 @@ class wp_trello {
 		$trello       = new trello_oauth( $access_token['oauth_token'], $access_token['oauth_token_secret'] );
 		$method       = 'get' . ucfirst( $object );
 		$data         = call_user_func( array( $trello, $method ), $id );
-		$data         = $trello->getDropdown( $data, substr( $object, 0, -1 ) );
+
+		if ( $object === 'checkboxlists' ) {
+			$data         = $trello->getCheckboxes($data);
+		} else{
+			$data         = $trello->getDropdown( $data, substr( $object, 0, -1 ) );
+		}
 
 		return $data;
 	}
@@ -427,6 +454,30 @@ class wp_trello {
 		$response['redirect'] = $this->callback_url;
 		$response['message']  = 'success';
 		$response['error']    = $delete;
+		echo json_encode( $response );
+		die;
+	}
+
+	function wpt_update_lists() {
+		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'wp_trello' ) ) {
+			return 0;
+		} else if ( ! isset( $_POST['id'] ) || ! isset( $_POST['new'] ) ) {
+			return 0;
+		}
+
+		$savedListIds = get_option('wptsettings_lists');
+
+		foreach ( $savedListIds as $savedListId => $val ) {
+			if ( $savedListId == $_POST['id'] ) {
+				$savedListIds[$savedListId] = (bool) $_POST['new']; // change value
+			}
+		}
+
+		update_option('wptsettings_lists', $savedListIds);
+
+		$response['error']   = false;
+		$response['message'] = 'success';
+		$response['objects'] = $savedListIds;
 		echo json_encode( $response );
 		die;
 	}

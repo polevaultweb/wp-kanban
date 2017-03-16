@@ -363,6 +363,10 @@ class trello_oauth {
 		return $all_lists;
 	}
 
+	function getCheckboxlists( $board ) {
+		return $this->getLists( $board );
+	}
+
 	function getList( $id ) {
 		$params = array('card_fields' => 'name,desc');
 		$list   = $this->get( 'lists/' . $id, $params, 0 );
@@ -400,5 +404,44 @@ class trello_oauth {
 		}
 
 		return $select;
+	}
+ 
+	function getCheckboxes($lists) {
+		$arr = array(); 
+		if ( empty( $lists ) ) {
+			return $arr;
+		}
+		
+		$savedListIds = get_option('wptsettings_lists');
+
+		// Update savedLists
+		$this->saveLists($lists);	
+
+		// Iterate over all lists and check which ones
+		// are saved as options and flag them.
+		foreach ( $lists as $list ) {
+			$id = $list->id;
+			$title = isset( $list->displayName ) ? $list->displayName : $list->name;
+
+			$arr[ $id ]['list_id'] = $id;
+			$arr[ $id ]['title'] 	= $title;
+
+			foreach ( $savedListIds as $savedListId => $val ) {
+				if ( $id == $savedListId ) {
+					$arr[ $id ]['isShown'] = $val;
+				}
+			}
+		}
+
+		return $arr;
+	} 
+
+	function saveLists($lists) {
+		$arr = array();
+
+		foreach ( $lists as $list ) {
+			$arr[$list->id] = false;
+		}
+		update_option('wptsettings_lists', $arr);
 	}
 }

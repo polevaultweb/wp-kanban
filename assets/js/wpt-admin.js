@@ -1,5 +1,17 @@
 jQuery(document).ready(function($){ 
 
+	$('input[type="checkbox"]').live('change', function() {
+			$.post(ajaxurl, {
+				 action: 'wpt_update_lists',
+				 id: $(this).attr('data-key'),
+				 new: $(this).is(':checked'),
+				 nonce: wp_trello.nonce
+			 }, 
+			function(data) {
+				console.log(JSON.stringify(data.objects));
+			}, 'json');
+	 });
+
 	$('select[name="wptsettings_settings[wptsettings_helper_orgs]"]').change(function(){
 		var objectid = $('option:selected', this).val();
 		$('#org-id').html('');
@@ -20,7 +32,7 @@ jQuery(document).ready(function($){
 		resetDropdown('Cards');
 		if (objectid != '0') {
 			$('#board-id').html(objectid);
-			populateDropdown(objectid, 'lists');
+			populateCheckboxes(objectid);
 		}
 		
 	 });
@@ -62,6 +74,28 @@ jQuery(document).ready(function($){
         , 'json');
         return false;
 		 
+	 }
+
+	 function populateCheckboxes(id) {
+		 $.post(ajaxurl, {
+				 action: 'wpt_get_objects',
+				 id: id,
+				 type: 'checkboxlists',
+				 nonce: wp_trello.nonce
+			 }, 
+			function(data) {
+				console.log(JSON.stringify(data.objects));
+				$td = $('select[name="wptsettings_settings[wptsettings_helper_lists]"]').parent();
+				$td.empty();
+				$.each(data.objects, function(key, val) {
+					if ( val.isShown ) {
+						$td.append('<label><input type="checkbox" class="listcheckbox" data-key="'+key+'" name="wptsettings_lists['+key+']" checked="checked" />'+val.title+'</label><br>');
+					} else {
+						$td.append('<label><input type="checkbox" class="listcheckbox" data-key="'+key+'" name="wptsettings_lists['+key+']" />'+val.title+'</label><br>');
+					}
+					
+				});
+			}, 'json');
 	 }
 	 
 	 function resetDropdown(type) {
