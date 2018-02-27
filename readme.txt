@@ -5,8 +5,8 @@ Plugin URI: http://www.polevaultweb.co.uk/plugins/wp-trello/
 Author URI: http://www.polevaultweb.com/
 Tags: trello, cards, boards, lists, widget, shortcode, api, integration
 Requires at least: 3.0
-Tested up to: 4.6
-Stable tag: 1.0.7
+Tested up to: 4.9.4
+Stable tag: 1.0.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -50,6 +50,10 @@ You can use the built in installer and upgrader, or you can install the plugin m
 If you have to upgrade manually simply repeat the installation steps and re-enable the plugin.
 
 == Changelog ==
+
+= 1.0.8 2018-02-27 =
+
+* Fix - Account tab vertical alignment to low
 
 = 1.0.7 2016-08-21 =
 

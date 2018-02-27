@@ -4,7 +4,7 @@ Plugin Name: WP Trello
 Plugin URI: http://www.polevaultweb.co.uk/plugins/wp-trello/  
 Description: A plugin to display data from Trello in your WordPress site.
 Author: polevaultweb 
-Version: 1.0.7
+Version: 1.0.8
 Author URI: http://www.polevaultweb.com/
 
 Copyright 2013  polevaultweb  (email : info@polevaultweb.com)
@@ -62,7 +62,7 @@ class wp_trello {
 
 		$this->plugin_path    = plugin_dir_path( __FILE__ );
 		$this->plugin_url     = plugin_dir_url( __FILE__ );
-		$this->plugin_version = '1.0.7';
+		$this->plugin_version = '1.0.8';
 		$this->plugin_l10n    = 'wp-trello';
 
 		$this->request_token_url = $this->api_base . 'OAuthGetRequestToken';
