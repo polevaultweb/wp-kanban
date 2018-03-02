@@ -32,9 +32,7 @@ Different types - organizations, boards, lists, cards, card.
 
 The plugin comes with a handy API helper to find the IDs of all your Trello data.
 	
-If you have any issues or feature requests please visit and use the [Support Forum](http://www.polevaultweb.com/support/forum/wp-trello-plugin/)
-
-[Plugin Page](http://www.polevaultweb.com/plugins/wp-trello/) | [@polevaultweb](http://www.twitter.com/polevaultweb/)
+If you have any issues or feature requests please visit and use the [Support Forum](https://wordpress.org/support/plugin/wp-trello)
 
 == Installation ==
 
@@ -92,7 +90,7 @@ If you have to upgrade manually simply repeat the installation steps and re-enab
 
 = I have an issue with the plugin =
 
-Please visit the [Support Forum](http://www.polevaultweb.com/support/forum/wp-trello-plugin/) and see what has been raised before, if not raise a new topic.
+Please visit the [Support Forum](https://wordpress.org/support/plugin/wp-trello) and see what has been raised before, if not raise a new topic.
 
 == Screenshots ==
 
