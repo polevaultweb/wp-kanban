@@ -1,4 +1,4 @@
-=== WP Trello ===
+# WP Trello 
 Contributors: polevaultweb
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=R6BY3QARRQP2Q
 Plugin URI: http://www.polevaultweb.co.uk/plugins/wp-trello/
@@ -12,7 +12,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 A plugin to display data from Trello in your WordPress site.
 
-== Description ==
+## Description
 
 This plugin displays organizations, boards, lists and cards from Trello the awesome collaboration tool. Display the data via shortcodes or widgets. Connect with your Trello account securely using oAuth.
 
@@ -34,7 +34,7 @@ The plugin comes with a handy API helper to find the IDs of all your Trello data
 	
 If you have any issues or feature requests please visit and use the [Support Forum](https://wordpress.org/support/plugin/wp-trello)
 
-== Installation ==
+## Installation 
 
 This section describes how to install the plugin and get it working.
 
@@ -47,58 +47,58 @@ You can use the built in installer and upgrader, or you can install the plugin m
 
 If you have to upgrade manually simply repeat the installation steps and re-enable the plugin.
 
-== Changelog ==
+## Changelog 
 
-= 1.0.8 2018-02-27 =
+### 1.0.8 2018-02-27 
 
 * Fix - Account tab vertical alignment to low
 
-= 1.0.7 2016-08-21 =
+### 1.0.7 2016-08-21 
 
 * Fix - Compatibile with 4.6
 * Improvement - Code fixes
 
-= 1.0.6 =
+### 1.0.6 
 
 * Improvement - Links in cards now made clickable
 
-= 1.0.5 =
+### 1.0.5 
 
 * Fix - Links now don't appear if you pass link="no" to shortcode
 
-= 1.0.4 =
+### 1.0.4 
 
 * Fix - Opening PHP tags shorthand removed for compatibility, thanks Paul!
 
-= 1.0.3 =
+### 1.0.3 
 
 * Fix - Cannot redeclare class OAuthSignatureMethod_HMAC_SHA1 errors
 
-= 1.0.2 =
+### 1.0.2 
 
 * Fix - End of file parse errors
 
-= 1.0.1 =
+### 1.0.1 
 
 * Fix - Settings issues
 
-= 1.0 =
+### 1.0 
 
 * First release, please report any issue.
 
-== Frequently Asked Questions ==
+## Frequently Asked Questions 
 
-= I have an issue with the plugin =
+### I have an issue with the plugin 
 
 Please visit the [Support Forum](https://wordpress.org/support/plugin/wp-trello) and see what has been raised before, if not raise a new topic.
 
-== Screenshots ==
+## Screenshots 
 
 1. Screenshot of the general settings.
 2. Screenshot of the API helper.
 3. Screenshot of the widget.
 4. Screenshot of the plugin output.
 
-== Disclaimer ==
+## Disclaimer 
 
 This plugin uses the Trello API and is not endorsed or certified by Trello. All Trello logoes and trademarks displayed on this website are property of Trello.
