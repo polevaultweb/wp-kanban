@@ -364,14 +364,14 @@ class trello_oauth {
 	}
 
 	function getList( $id ) {
-		$params = array();
+		$params = array('card_fields' => 'name,desc');
 		$list   = $this->get( 'lists/' . $id, $params, 0 );
 
 		return $list;
 	}
 
 	function getCards( $list ) {
-		$params    = array();
+		$params    = array('card_fields' => 'name,desc');
 		$all_cards = $this->get( 'lists/' . $list . '/cards/', $params, 0 );
 
 		return $all_cards;
