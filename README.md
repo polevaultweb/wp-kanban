@@ -30,6 +30,14 @@ Display the cards from the Welcome board's Intermediate List with links:
 
 Different types - organizations, boards, lists, cards, card.
 
+Add checklists to cards:
+
+`[wp-trello type="cards" id="507570c53db6337074ca4c92" link="yes" details="checklists"]`
+
+Checklist list items have different classes: complete, incomplete
+
+To hide or line-through checked items, set custom css like `.wpt-checklist .complete { text-decoration: line-through; }`
+
 The plugin comes with a handy API helper to find the IDs of all your Trello data.
 	
 If you have any issues or feature requests please visit and use the [Support Forum](https://wordpress.org/support/plugin/wp-trello)
