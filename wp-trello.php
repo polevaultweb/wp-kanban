@@ -248,18 +248,55 @@ class wp_trello {
 			'type' => 'cards',
 			'id'   => '',
 			'link' => false,
+			'details' => '',
 		), $atts ) );
 
 		if ( ! $this->is_connected() ) {
 			return '';
 		}
 
-		return $this->trello_output( $type, $id, $link );
+		return $this->trello_output( $type, $id, $link, $details );
 	}
 
-	function trello_output( $type, $id, $link ) {
+	function checklist_output($checklists){
+		$output = '<div class="wpt-checklist-wrapper">';
+		foreach($checklists as $checklist){
+			$output .= '<div class="wpt-checklist" id=wpt-checklist-"'.$checklist->id.'">';
+			$output .= $checklist->name;
+			$output .= '<ul>';
+			foreach($checklist->checkItems as $item){
+				$output .= '<li class="'.$item->state.'">'.$item->name.'</li>';
+			}
+			$output .= '</li>';
+			$output .= '</div>';
+		}
+		$output .= '</div>';
+		return $output;
+	}
+
+	function add_details($details_array, $data, $item = null){
+		$html='';
+		// add details in given order
+		foreach($details_array as $detail){
+			switch($detail){
+				case('checklists'):
+					$checklists = $data->checklists;
+					if($item && $item->id){
+						$checklists = array_filter($data->checklists, function($e) use ($item) {
+							return $e->idCard == $item->id;
+						}, 0);
+					}
+					$html .= $this->checklist_output($checklists);
+			}
+		}
+		return $html;
+	}
+
+	function trello_output( $type, $id, $link, $details ) {
 		$data         = $this->get_data( $type, $id );
 		$parent       = $this->get_parent( $type, $id );
+		$details_array = explode(',', $details);
+		$details 			= $this->get_details( $details_array, $data );
 		$singular     = substr( $type, 0, -1 );
 		$target_blank = $this->default_val( $this->settings, 'wptsettings_general_target-blank', '' );
 		$target       = '';
@@ -276,6 +313,7 @@ class wp_trello {
 				} else {
 					$html .= make_clickable( $item->name );
 				}
+				$html.=$this->add_details($details_array, $details, $item);
 				$html .= '</li>';
 			}
 			$html .= '</ul>';
@@ -288,6 +326,7 @@ class wp_trello {
 			} else {
 				$html .= ( isset( $data->name ) ) ? make_clickable( $data->name ) : '';
 			}
+			$html.=$this->add_details($details_array, $details);
 			$html .= '</div>';
 			$html .= '</div>';
 		}
@@ -307,6 +346,31 @@ class wp_trello {
 		$data         = call_user_func( array( $trello, $method ), $id );
 
 		return $data;
+	}
+
+	function extract_checklist_ids($data){
+		$res = array();
+		foreach($data as $k=>$v) {
+			$res = array_merge($res, $v->idChecklists);
+		}
+		return $res;
+	}
+
+	function get_details( $details_array, $data ) {
+		$result = new stdClass();
+		foreach ($details_array as $key => $value)
+		{
+			$result->$value = [];
+		}	
+		if(in_array('checklists', $details_array)){
+			$checklists = $this->extract_checklist_ids($data);
+			if(count($checklists)){
+				foreach($checklists as $id){
+					array_push($result->checklists, $this->get_data('checklist', $id));
+				}
+			} 
+		}
+		return $result;
 	}
 
 	function get_dropdown_data( $object, $id ) {

@@ -384,6 +384,13 @@ class trello_oauth {
 		return $card;
 	}
 
+	function getChecklist( $id ) {
+		$params = array();
+		$checklist = $this->get( 'checklists/' . $id, $params, 0);
+
+		return $checklist;
+	}
+
 	function getDropdown( $data, $object ) {
 		$select   = array();
 		$select[] = 'Select ' . ucfirst( $object );
