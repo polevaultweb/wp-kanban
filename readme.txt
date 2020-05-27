@@ -1,8 +1,8 @@
 === WP Kanban ===
 Contributors: polevaultweb
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=R6BY3QARRQP2Q
-Plugin URI: https://www.polevaultweb.com
-Author URI: http://www.polevaultweb.com/
+Plugin URI: https://wordpress.org/plugins/wp-trello/
+Author URI: https://www.polevaultweb.com/
 Tags: trello, kanban, cards, boards, lists
 Requires at least: 3.0
 Tested up to: 5.4
