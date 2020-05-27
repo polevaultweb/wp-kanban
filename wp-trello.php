@@ -4,7 +4,7 @@ Plugin Name: WP Kanban
 Plugin URI: https://wordpress.org/plugins/wp-trello/
 Description: A plugin to display data from Trello in your WordPress site.
 Author: polevaultweb 
-Version: 1.0.8
+Version: 1.0.9
 Author URI: https://polevaultweb.com/
 
 Copyright 2013  polevaultweb  (email : info@polevaultweb.com)
