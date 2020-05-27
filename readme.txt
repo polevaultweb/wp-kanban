@@ -1,12 +1,12 @@
-=== WP Trello ===
+=== WP Kanban ===
 Contributors: polevaultweb
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=R6BY3QARRQP2Q
-Plugin URI: http://www.polevaultweb.co.uk/plugins/wp-trello/
+Plugin URI: https://www.polevaultweb.com
 Author URI: http://www.polevaultweb.com/
-Tags: trello, cards, boards, lists, widget, shortcode, api, integration
+Tags: trello, kanban, cards, boards, lists
 Requires at least: 3.0
-Tested up to: 4.9.4
-Stable tag: 1.0.8
+Tested up to: 5.4
+Stable tag: 1.0.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -48,6 +48,10 @@ You can use the built in installer and upgrader, or you can install the plugin m
 If you have to upgrade manually simply repeat the installation steps and re-enable the plugin.
 
 == Changelog ==
+
+= 1.0.9 2020-05-27 =
+
+* Fix - Trello trademark issues
 
 = 1.0.8 2018-02-27 =
 
